@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import pandas as pd
+import requests
 
 # Function for fetching poster
 def posterFetching(movie_id):
@@ -28,11 +29,9 @@ with open('movie.json', 'r') as f:
 
 movies = pd.DataFrame(movies_dict)
 
-# replace protocol and file path as per your requirement
-file_path = "C:/Users/PKVidyarthi/PycharmProjects/PythonProject/similarity.json"
-protocol = "file"
-
-similarity = pd.read_json(f"{protocol}://{file_path}").values
+# Load JSON string from file
+file_url = 'https://github.com/pkvidyarthi/Content-Based-Movie-Recommender-System/raw/main/similarity.json'
+similarity = pd.read_json(file_url)
 
 st.title('Movie Recommender System')
 
