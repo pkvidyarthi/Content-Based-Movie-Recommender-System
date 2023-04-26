@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="widt, initial-scale=1.0">
+    <title>MovieRecommenderSystem</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.31.0/build/stlite.js"></script>
+    <script>
+        stlite.mount({
+            mainScriptData: `
+            # Streamlit : A faster way to build and share data apps
+# Streamlit turns data scripts into shareable web apps in minutes.
+
+import streamlit as st
+# Run Command => streamlit run web.py
+st.title('Movie Recommender System')
+
+# pickle to load file which is dumped by notebook
+import pickle
+
+import pandas as pd
+movies_dict = pickle.load(open('moviesDict.pkl','rb'))
+similarity = pickle.load(open('similarity.pkl','rb'))
+movies = pd.DataFrame(movies_dict)
+
+# Selectbox from streamlit
+option = st.selectbox('Please select your favorite movie, as my job is to recommend some movies to you', movies['title'].values)
+
+# Poster
+# API Key : 009859e96aae00ca3e03550fbdafd804
+# URL : https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
+# Visit this url and copy json file and open in json viewer
+# we have to edit url
+# edited url : https://api.themoviedb.org/3/movie/{}?api_key=009859e96aae00ca3e03550fbdafd804&language=en-US.format(movie_id)
+
+# Function Fetching Poster
+import requests
+def posterFetching(movie_id):
+    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=009859e96aae00ca3e03550fbdafd804&language=en-US'.format(movie_id))
+    data = response.json()
+    # Google it : TMDB image path and copy path
+    # https://image.tmdb.org/t/p/w500/
+    return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
+# Creating Recommend function
+def Recommend(movie):
+    movie_index = movies[movies['title'] == movie].index[0]
+    distances = similarity[movie_index]
+    movies_list = sorted(list(enumerate(distances)), reverse = True, key = lambda x:x[1])[1:6]
+    recommendedMovies = []
+    recommendPoster = []
+    for i in movies_list:
+        movie_id = movies.iloc[i[0]].movie_id
+        recommendedMovies.append(movies.iloc[i[0]].title)
+        # Fetching Poster From API
+        recommendPoster.append(posterFetching(movie_id))
+    return recommendedMovies, recommendPoster
+
+# Button
+if st.button('Recommend'):
+    names, poster = Recommend(option)
+    # To display poster : Use Layout your app : Streamlit
+    columns = st.columns(5)
+    for i in range(5):
+        with columns[i]:
+            st.text(names[i])
+            st.image(poster[i])
+
+
+            `
+        })
+    </script>
+</body>
+</html>
