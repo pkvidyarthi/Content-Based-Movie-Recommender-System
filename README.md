@@ -1,4 +1,5 @@
 # Content-Based-Movie-Recommender-System
+## Steps :
 1. Import Libraries: Import the necessary libraries for the code.
 
 2. Define posterFetching Function: Define the function to fetch movie posters using the TMDb API.
@@ -18,6 +19,9 @@
 9. Recommendation Display: Display the recommended movies and their poster images on the webpage.
 
 10. End of Code.
+
+## Explanation :
+
 * sklearn - A machine learning library used for various tasks.
 
 * sklearn.feature_extraction.text - A module for text feature extraction.
