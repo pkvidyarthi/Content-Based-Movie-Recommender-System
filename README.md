@@ -18,3 +18,46 @@
 9. Recommendation Display: Display the recommended movies and their poster images on the webpage.
 
 10. End of Code.
+* sklearn - A machine learning library used for various tasks.
+
+* sklearn.feature_extraction.text - A module for text feature extraction.
+
+* CountVectorizer - Converts text data into numerical vectors.
+
+* stop_words - Removes common English stopwords during vectorization.
+
+* fit_transform - Fits the vectorizer on input data and transforms text into a matrix.
+
+* toarray - Converts a sparse matrix to a dense array.
+
+* shape - Returns the dimensions of an array.
+
+* get_feature_names_out - Returns the feature names from the vectorizer.
+
+* nltk - A library for natural language processing.
+
+* PorterStemmer - A class for word stemming.
+
+* stemming - A function that applies stemming to text.
+
+* apply - Applies a function to each element or column of a DataFrame.
+
+* cosine_similarity - Calculates cosine similarity between vectors.
+
+* df - A Pandas DataFrame for tabular data.
+
+* iloc - Integer-based indexing for retrieving rows from a DataFrame.
+
+* enumerate - Iterates over a sequence while keeping track of the index.
+
+* sorted - Sorts a sequence in ascending or descending orderpickle is used to serialize and save Python objects to files.
+
+* pickle - Used to serialize and save Python objects to files.
+
+### Fetching Data with Website
+1. Login to TMDB
+2. Go to Settings
+3. API
+4. Copy API KEY
+5. Paste API KEY as place of 'url' in the PosterFetching Function.
+
