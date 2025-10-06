@@ -1,47 +1,22 @@
+
+
 import streamlit as st
 import json
 import pandas as pd
 import requests
-import os
 
-# -------------------------------------------------
-# ✅ Get correct absolute path for both local & Streamlit Cloud
-# -------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# -------------------------------------------------
-# ✅ Load movie.json file
-# -------------------------------------------------
-movie_path = os.path.join(BASE_DIR, 'movie.json')
-with open(movie_path, 'r', encoding='utf-8') as f:
-    movies_dict = json.load(f)
-movies = pd.DataFrame(movies_dict)
-
-# -------------------------------------------------
-# ✅ Load similarity.json file
-# -------------------------------------------------
-similarity_path = os.path.join(BASE_DIR, 'similarity.json')
-with open(similarity_path, 'r', encoding='utf-8') as f:
-    similarity = json.load(f)
-
-# -------------------------------------------------
-# ✅ Function to fetch movie poster
-# -------------------------------------------------
+# Function for fetching poster
 def posterFetching(movie_id):
-    response = requests.get(
-        f'https://api.themoviedb.org/3/movie/{movie_id}?api_key=009859e96aae00ca3e03550fbdafd804&language=en-US'
-    )
+    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=009859e96aae00ca3e03550fbdafd804&language=en-US'.format(movie_id))
     data = response.json()
-    return "https://image.tmdb.org/t/p/w500/" + data.get('poster_path', '')
+    return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
 
-# -------------------------------------------------
-# ✅ Function to recommend movies
-# -------------------------------------------------
+# Function for recommending movies
 def Recommend(movie):
     movie_index = movies[movies['title'] == movie].index[0]
     movie_index = int(movie_index)
     distances = similarity[movie_index]
-    movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
+    movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x:x[1])[1:6]
     recommendedMovies = []
     recommendPoster = []
     for i in movies_list:
@@ -50,20 +25,26 @@ def Recommend(movie):
         recommendPoster.append(posterFetching(movie_id))
     return recommendedMovies, recommendPoster
 
-# -------------------------------------------------
-# ✅ Streamlit UI
-# -------------------------------------------------
-st.title('🎬 Movie Recommender System')
+# Load movie data from JSON file
+with open('movie.json', 'r') as f:
+    movies_dict = json.load(f)
 
-option = st.selectbox(
-    'Please select your favorite movie, as my job is to recommend some movies to you',
-    movies['title'].values
-)
+movies = pd.DataFrame(movies_dict)
 
+# Load JSON string from file
+file_url = 'https://github.com/pkvidyarthi/Content-Based-Movie-Recommender-System/raw/main/similarity.json'
+similarity = pd.read_json(file_url)
+
+st.title('Movie Recommender System')
+
+# Selectbox from streamlit
+option = st.selectbox('Please select your favorite movie, as my job is to recommend some movies to you', movies['title'].values)
+
+# Button
 if st.button('Recommend'):
-    names, posters = Recommend(option)
+    names, poster = Recommend(option)
     columns = st.columns(5)
     for i in range(5):
         with columns[i]:
             st.text(names[i])
-            st.image(posters[i])
+            st.image(poster[i])
