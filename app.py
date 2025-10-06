@@ -6,9 +6,9 @@ import pandas as pd
 import requests
 
 # Function for fetching poster
-def posterFetching(movie_id):
-    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=009859e96aae00ca3e03550fbdafd804&language=en-US'.format(movie_id))
-    data = response.json()
+def posterFetching(movie_id): 
+    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=009859e96aae00ca3e03550fbdafd804&language=en-US'.format(movie_id)) 
+    data = response.json() 
     return "https://image.tmdb.org/t/p/w500/" + data['poster_path']
 
 # Function for recommending movies
@@ -48,3 +48,4 @@ if st.button('Recommend'):
         with columns[i]:
             st.text(names[i])
             st.image(poster[i])
+
